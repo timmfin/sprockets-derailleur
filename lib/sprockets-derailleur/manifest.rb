@@ -113,15 +113,13 @@ module Sprockets
 
               if asset = find_asset(path)
 
-                data['files'][asset.digest_path] = {
+                data['files'][asset.logical_path] = {
                   'logical_path' => asset.logical_path,
                   'mtime'        => asset.mtime.iso8601,
-                  'size'         => asset.length,
-                  'digest'       => asset.digest
+                  'size'         => asset.bytesize,
                 }
-                data['assets'][asset.logical_path] = asset.digest_path
 
-                target = File.join(dir, asset.digest_path)
+                target = File.join(dir, asset.logical_path)
 
                 if File.exist?(target)
                   logger.debug "Skipping #{target}, already exists"
