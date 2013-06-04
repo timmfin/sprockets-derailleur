@@ -15,8 +15,12 @@ module Sprockets
       paths_with_errors = {}
 
       time = Benchmark.measure do
-        paths = environment.each_logical_path(*args).to_a +
-          args.flatten.select { |fn| Pathname.new(fn).absolute? if fn.is_a?(String)}
+        if args.empty? 
+          paths = environment.each_logical_path(*args).to_a +
+            args.flatten.select { |fn| Pathname.new(fn).absolute? if fn.is_a?(String)}
+        else
+          paths = args[0]
+        end
 
         # Skip all files without extensions, see
         # https://github.com/sstephenson/sprockets/issues/347 for more info
