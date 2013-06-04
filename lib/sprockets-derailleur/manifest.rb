@@ -34,12 +34,13 @@ module Sprockets
           end
         end
 
-        logger.warn "Initializing #{@workers} workers"
-
         workers = []
         @workers.times do
           workers << worker(paths)
         end
+
+        logger.warn "Initialized #{@workers} workers: #{workers.map {|w| w[:pid] }.join ', '}"
+
 
         reads = workers.map{|worker| worker[:read]}
         writes = workers.map{|worker| worker[:write]}
@@ -83,15 +84,16 @@ module Sprockets
         save
       end
 
-      logger.warn "Completed compiling assets (#{(time.real * 100).round / 100.0}s)"
-
       unless paths_with_errors.empty?
-        logger.warn "Asset paths with errors:"
+        logger.warn "\nAsset paths with errors:"
 
         paths_with_errors.each do |path, message|
           logger.warn "\t#{path}: #{message}"
         end
       end
+
+      logger.warn "\nCompleted compiling assets (#{(time.real * 100).round / 100.0}s)"
+
     end
 
     def worker(paths)
